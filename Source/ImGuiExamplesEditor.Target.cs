@@ -9,5 +9,6 @@ public class ImGuiExamplesEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
 		ExtraModuleNames.Add("ImGuiExamples");
+		ExtraModuleNames.Add("ImGuiEditorWidgets");
 	}
 }

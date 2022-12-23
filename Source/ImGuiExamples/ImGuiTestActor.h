@@ -27,6 +27,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Imgui")
 	bool AddWidgetToMainWindow = true;
 
+	UPROPERTY(EditAnywhere, Category = "Imgui")
+	UTexture2D* TestImage = nullptr;
+
 private:
 	FDelegateHandle MainWindowTickHandle;
 	TSharedPtr<SWindow> WidgetWindow;

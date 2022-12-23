@@ -44,6 +44,8 @@ void AImGuiTestActor::TickImGuiWidget(ImGuiContext* Context)
 {
 	FImGuiTickScope Scope{ Context };
 
+	FImGuiRuntimeModule& ImGuiRuntimeModule = FModuleManager::GetModuleChecked<FImGuiRuntimeModule>("ImGuiRuntime");
+
 	if (ImGui::Begin("TestActor", nullptr, ImGuiWindowFlags_None))
 	{
 		if (ImGui::Button("Scale"))
@@ -51,11 +53,15 @@ void AImGuiTestActor::TickImGuiWidget(ImGuiContext* Context)
 			SetActorScale3D(GetActorScale3D() * 1.2);
 		}
 		
-		ImGui::Button("Drag");
-		if (ImGui::IsItemActive())
+		if (TestImage)
 		{
-			ImGuiIO& io = ImGui::GetIO();
-			ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_Button), 4.0f);
+			const auto BindingParams = ImGuiRuntimeModule.RegisterOneFrameResource(TestImage);
+
+			// use the default size
+			ImGui::Image(BindingParams.Id, BindingParams.Size, BindingParams.UV0, BindingParams.UV1);
+
+			// override size
+			ImGui::Image(BindingParams.Id, ImVec2{ 128.f, 128.f }, BindingParams.UV0, BindingParams.UV1);
 		}
 	}
 	ImGui::End();
