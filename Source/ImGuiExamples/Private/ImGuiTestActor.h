@@ -4,11 +4,10 @@
 #include "GameFramework/Actor.h"
 #include "ImGuiTestActor.generated.h"
 
-struct ImGuiContext;
-class SWindow;
+class UTexture2D;
 
 UCLASS(hideCategories = (Rendering, Replication, Collision, HLOD, Physics, Networking, Input, Actor, Cooking))
-class IMGUIEXAMPLES_API AImGuiTestActor : public AActor
+class AImGuiTestActor : public AActor
 {
 	GENERATED_BODY()
 	
@@ -19,18 +18,21 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-private:
-	void TickImGuiWidget(struct ImGuiContext* Context);
-
 public:
 	/* If disabled the actor creates a new window for showing ImGui widgets */
 	UPROPERTY(EditAnywhere, Category = "Imgui")
-	bool AddWidgetToMainWindow = true;
+	bool bAddWidgetToMainWindow = true;
 
 	UPROPERTY(EditAnywhere, Category = "Imgui")
-	UTexture2D* TestImage = nullptr;
+	UTexture2D* Texture = nullptr;
 
+#ifdef WITH_IMGUI
 private:
+	void TickImGuiWidget(struct FImGuiTickContext* Context);
+
 	FDelegateHandle MainWindowTickHandle;
-	TSharedPtr<SWindow> WidgetWindow;
+	TWeakPtr<class SWindow> WidgetWindow;
+
+	float TextureDisplayScale = 1.f;
+#endif
 };

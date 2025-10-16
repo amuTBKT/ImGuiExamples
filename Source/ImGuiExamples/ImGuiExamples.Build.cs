@@ -6,8 +6,21 @@ public class ImGuiExamples : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Slate", "SlateCore" });
+		PublicDependencyModuleNames.AddRange(
+			new string[]
+			{
+				"Core",
+				"Engine",
+				"SlateCore",
+				"CoreUObject",
+			});
 
-        PrivateDependencyModuleNames.AddRange(new string[] { "ImGui", "ImGuiRuntime" });
-    }
+		// disabled on Shipping and Server configs
+		bool bIsConfigurationSupported = (Target.Configuration != UnrealTargetConfiguration.Shipping);
+		bool bIsTargetTypeSupported = ((Target.Type != TargetType.Server) && (Target.Type != TargetType.Program));
+		if (bIsConfigurationSupported && bIsTargetTypeSupported)
+		{
+			PrivateDependencyModuleNames.AddRange(new string[] { "ImGui", "ImGuiRuntime" });
+		}
+	}
 }

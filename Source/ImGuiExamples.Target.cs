@@ -6,8 +6,8 @@ public class ImGuiExamplesTarget : TargetRules
 	public ImGuiExamplesTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
+		DefaultBuildSettings = BuildSettingsVersion.Latest;
+		
 		ExtraModuleNames.Add("ImGuiExamples");
 	}
 }

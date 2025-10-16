@@ -1,0 +1,3 @@
+[submodule "Plugins/ImGuiPlugin"]
+	path = Plugins/ImGuiPlugin
+	url = https://github.com/amuTBKT/ImGuiPlugin
