@@ -20,7 +20,10 @@
 		},
 		{
 			"Name": "ImGuiPlugin",
-			"Enabled": true
+			"Enabled": true,
+			"TargetDenyList": [ "Server", "Program" ],
+			"TargetConfigurationDenyList": [ "Shipping" ],
+			"PlatformAllowList": [ "Win64" ]
 		}
 	]
 }

@@ -15,10 +15,9 @@ public class ImGuiExamples : ModuleRules
 				"CoreUObject",
 			});
 
-		// disabled on Shipping and Server configs
-		bool bIsConfigurationSupported = (Target.Configuration != UnrealTargetConfiguration.Shipping);
-		bool bIsTargetTypeSupported = ((Target.Type != TargetType.Server) && (Target.Type != TargetType.Program));
-		if (bIsConfigurationSupported && bIsTargetTypeSupported)
+		ProjectDescriptor ProjectFile = ProjectDescriptor.FromFile(Target.ProjectFile);
+		PluginInfo ImGuiPlugin = Plugins.GetPlugin("ImGuiPlugin");
+		if (ImGuiPlugin != null && Plugins.IsPluginEnabledForTarget(ImGuiPlugin, ProjectFile, Target.Platform, Target.Configuration, Target.Type))
 		{
 			PrivateDependencyModuleNames.AddRange(new string[] { "ImGui", "ImGuiRuntime" });
 		}
