@@ -2,17 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ImGuiTestActor.generated.h"
-
-class UTexture2D;
+#include "ImGuiWindowActor.generated.h"
 
 UCLASS(hideCategories = (Rendering, Replication, Collision, HLOD, Physics, Networking, Input, Actor, Cooking))
-class AImGuiTestActor : public AActor
+class AImGuiWindowActor : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	AImGuiTestActor();
+public:
+	AImGuiWindowActor();
 
 protected:
 	virtual void BeginPlay() override;
@@ -24,7 +22,7 @@ public:
 	bool bAddWidgetToMainWindow = true;
 
 	UPROPERTY(EditAnywhere, Category = "Imgui")
-	UTexture2D* Texture = nullptr;
+	class UTexture2D* Texture = nullptr;
 
 #ifdef WITH_IMGUI
 private:

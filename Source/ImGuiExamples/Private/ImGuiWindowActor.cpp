@@ -1,22 +1,22 @@
-#include "ImGuiTestActor.h"
+#include "ImGuiWindowActor.h"
 
 #ifdef WITH_IMGUI
 #include "ImGuiSubsystem.h"
 #include "Widgets/SWindow.h"
 #endif
 
-AImGuiTestActor::AImGuiTestActor()
+AImGuiWindowActor::AImGuiWindowActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void AImGuiTestActor::BeginPlay()
+void AImGuiWindowActor::BeginPlay()
 {
 	Super::BeginPlay();
 
 #ifdef WITH_IMGUI
 	FOnTickImGuiWidgetDelegate TickDelegate;
-	TickDelegate.BindUObject(this, &AImGuiTestActor::TickImGuiWidget);
+	TickDelegate.BindUObject(this, &AImGuiWindowActor::TickImGuiWidget);
 
 	UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 	if (bAddWidgetToMainWindow)
@@ -30,7 +30,7 @@ void AImGuiTestActor::BeginPlay()
 #endif
 }
 
-void AImGuiTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void AImGuiWindowActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 #ifdef WITH_IMGUI
 	if (MainWindowTickHandle.IsValid())
@@ -48,7 +48,7 @@ void AImGuiTestActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 }
 
 #ifdef WITH_IMGUI
-void AImGuiTestActor::TickImGuiWidget(FImGuiTickContext* Context)
+void AImGuiWindowActor::TickImGuiWidget(FImGuiTickContext* Context)
 {
 	FImGuiTickScope Scope{ Context };
 
