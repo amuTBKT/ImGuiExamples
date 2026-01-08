@@ -21,5 +21,8 @@ public class ImGuiExamples : ModuleRules
 		{
 			PrivateDependencyModuleNames.AddRange(new string[] { "ImGui", "ImGuiRuntime" });
 		}
+
+		PrivateDependencyModuleNames.Add("Nanosvg");
+
 	}
 }
