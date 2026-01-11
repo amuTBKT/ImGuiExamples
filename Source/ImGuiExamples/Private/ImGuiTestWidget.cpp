@@ -113,7 +113,7 @@ namespace ImGuiTestWidget
 				ImFontAtlasRect SVGRect = {};
 				if (ImGuiSubsystem->GetSharedFontAtlas()->GetCustomRect(SVGAtlasRectId, &SVGRect))
 				{
-					ImGui::Image(UImGuiSubsystem::GetSharedFontTextureID(), ImVec2(SVGRect.w, SVGRect.h), SVGRect.uv0, SVGRect.uv1);
+					ImGui::Image(ImGuiSubsystem->GetSharedFontTextureID(), ImVec2(SVGRect.w, SVGRect.h), SVGRect.uv0, SVGRect.uv1);
 				}
 				else
 				{
