@@ -73,7 +73,7 @@ struct FImGuiScopedWidget : FNoncopyable
 	}
 	operator bool() const
 	{
-		return Context->ImGuiContext->WithinFrameScope;
+		return Context->ImguiContext->WithinFrameScope;
 	}
 	FImGuiTickContext* Context = nullptr;
 };
