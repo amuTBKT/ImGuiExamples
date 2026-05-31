@@ -19,7 +19,7 @@ protected:
 public:
 	/* If disabled the actor creates a new window for showing ImGui widgets */
 	UPROPERTY(EditAnywhere, Category = "Imgui")
-	bool bAddWidgetToMainWindow = true;
+	bool bAddWidgetToMainMenu = true;
 
 	UPROPERTY(EditAnywhere, Category = "Imgui")
 	class UTexture2D* Texture = nullptr;
@@ -28,7 +28,6 @@ public:
 private:
 	void TickImGuiWidget(struct FImGuiTickContext* Context);
 
-	FDelegateHandle MainWindowTickHandle;
 	TWeakPtr<class SWindow> WidgetWindow;
 
 	float TextureDisplayScale = 1.f;
