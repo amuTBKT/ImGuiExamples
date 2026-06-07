@@ -22,7 +22,7 @@ void AImGuiWindowActor::BeginPlay()
 	if (bAddWidgetToMainMenu)
 	{
 		ImGuiSubsystem->RegisterMainMenuWidget(
-			GetWorld(), "Demo.Actor", "Actor properties widget", IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Info"), TickDelegate, false);
+			GetWorld(), "Demo.Actor", "Actor properties widget", IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Info"), TickDelegate);
 	}
 	else
 	{
