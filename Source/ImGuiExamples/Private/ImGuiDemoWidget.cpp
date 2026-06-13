@@ -59,7 +59,7 @@ namespace ImGuiDemoWidget
 		UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
 		auto MenuIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Info"), ImGui::GetTextLineHeight());
-		FImGui::SubMenu("Demo", MenuIcon, MenuIcon,
+		FImGui::SubMenu("Demo",
 			[&]()
 			{
 				if (ImGui::MenuItem("Unreal", nullptr, bShowUnrealDemo))
@@ -79,7 +79,7 @@ namespace ImGuiDemoWidget
 					bShowImPlotDemo = !bShowImPlotDemo;
 				}
 				ImGui::SetItemTooltip("Show ImPlot demo window");
-			});
+			}, MenuIcon);
 
 		// optionally update widget active state to disable window tick
 		bool* bWidgetActiveState = ImGuiSubsystem->GetMainMenuWidgetActiveState(/*World=*/nullptr, "ImGui.Demo");
