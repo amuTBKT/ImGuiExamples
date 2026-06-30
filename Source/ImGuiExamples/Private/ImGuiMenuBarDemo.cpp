@@ -21,23 +21,45 @@ namespace ImGuiMenuBar_RootWidget
 		// the widget slot is never activated so we should not receive window tick callbacks!
 		check(Context->bIsTickingMainMenuBar);
 
+		const bool bIsHorizontalMenu = ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal;
+
 		// settings menu with icon
 		{
 			FImGuiImageBindingParams SettingsIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Settings"), 16.f * ImGui::GetStyle().FontScaleMain/*ImGui::GetTextLineHeightWithSpacing()*/);
-			FImGui::SubMenu("    ##Settings",
-				[]()
-				{
-					ImGui::MenuItem("Setting#1");
-					ImGui::MenuItem("Setting#2");
-					ImGui::MenuItem("Setting#3");
-				}, SettingsIcon, /*IconOffset=*/ImVec2(0.f, 2.5f));
+			if (bIsHorizontalMenu)
+			{
+				FImGui::SubMenu("    ###Settings",
+					[]()
+					{
+						ImGui::MenuItem("Setting#1");
+						ImGui::MenuItem("Setting#2");
+						ImGui::MenuItem("Setting#3");
+					}, SettingsIcon, /*IconOffset=*/ImVec2(0.f, 2.5f));
+			}
+			else
+			{
+				FImGui::SubMenu("Settings",
+					[]()
+					{
+						ImGui::MenuItem("Setting#1");
+						ImGui::MenuItem("Setting#2");
+						ImGui::MenuItem("Setting#3");
+					}, SettingsIcon);
+			}
 		}
 
 		// input text widget for on screen print
 		{
 			static char TextBuffer[32] = { 0 };
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.f);
-			ImGui::SetNextItemWidth(80.f * ImGui::GetStyle().FontScaleMain);
+			if (bIsHorizontalMenu)
+			{
+				ImGui::SetNextItemWidth(80.f * ImGui::GetStyle().FontScaleMain);
+			}
+			else
+			{
+				ImGui::SetNextItemWidth(100.f * ImGui::GetStyle().FontScaleMain);
+			}
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.f, 1.f));
 			ImGui::PushStyleColor(ImGuiCol_NavCursor, 0); // disable nav highlight
 			bool bProcessText = ImGui::InputTextWithHint("##Print", "Print text...", TextBuffer, sizeof(TextBuffer), ImGuiInputTextFlags_EnterReturnsTrue);
