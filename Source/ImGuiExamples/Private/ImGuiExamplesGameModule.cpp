@@ -14,7 +14,7 @@ public:
 	virtual void StartupModule() override
 	{
 #ifdef WITH_IMGUI
-		SETUP_DEFAULT_IMGUI_ALLOCATOR();
+		IMGUI_SETUP_DEFAULT_ALLOCATOR();
 #endif
 	}
 
