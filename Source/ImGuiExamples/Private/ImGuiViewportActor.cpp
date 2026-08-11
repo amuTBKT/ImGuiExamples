@@ -15,7 +15,7 @@ void AImGuiViewportActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 #ifdef WITH_IMGUI
-	if (FImGuiTickContext* TickContext = UImGuiSubsystem::Get()->GetWidgetTickContext(GetWorld()))
+	if (FImGuiTickContext* TickContext = UImGuiSubsystem::Get()->GetMainMenuWidgetTickContext(GetWorld()))
 	{
 		FImGuiTickScope Scope{ TickContext };
 

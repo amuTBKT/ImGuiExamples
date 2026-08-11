@@ -19,7 +19,7 @@ namespace ImGuiMenuBar_RootWidget
 		UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
 		// the widget slot is never activated so we should not receive window tick callbacks!
-		check(Context->bIsTickingMainMenuBar);
+		check(Context->MainMenuBar_bIsTicking);
 
 		const bool bIsHorizontalMenu = ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal;
 
@@ -190,7 +190,7 @@ namespace ImGuiMenuBar_SubMenuWidget
 		UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
 		// the widget slot is never activated so we should not receive window tick callbacks!
-		check(Context->bIsTickingMainMenuBar);
+		check(Context->MainMenuBar_bIsTicking);
 
 		// we can add items
 		{

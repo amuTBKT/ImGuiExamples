@@ -54,7 +54,7 @@ namespace ImGuiDemoWidget
 		LoadWidgetSettings();
 	}
 
-	static void TickMenuItem()
+	static void TickMenuItem(FImGuiTickContext* Context)
 	{
 		UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
@@ -82,12 +82,7 @@ namespace ImGuiDemoWidget
 			}, MenuIcon);
 
 		// optionally update widget active state to disable window tick
-		bool* bWidgetActiveState = ImGuiSubsystem->GetMainMenuWidgetActiveState(/*World=*/nullptr, "ImGui.Demo");
-		if (bWidgetActiveState)
-		{
-			*bWidgetActiveState = bShowUnrealDemo || bShowImGuiDemo || bShowImPlotDemo;
-		}
-
+		*Context->MainMenuBar_CurrentItemEnabledState = bShowUnrealDemo || bShowImGuiDemo || bShowImPlotDemo;
 	}
 	static void TickWindows()
 	{
@@ -192,7 +187,7 @@ namespace ImGuiDemoWidget
 					}
 					else
 					{
-						ImGui::Image(UImGuiSubsystem::GetMissingImageTextureID(), ImVec2(SVGSize, SVGSize));
+						ImGui::Image(ImTextureID_Invalid, ImVec2(SVGSize, SVGSize));
 					}
 				}
 			}
@@ -223,10 +218,10 @@ namespace ImGuiDemoWidget
 			}
 		};
 
-		if (Context->bIsTickingMainMenuBar)
+		if (Context->MainMenuBar_bIsTicking)
 		{
 			// since the widget uses `bTickInMenuBar` we can customize the menu item here
-			TickMenuItem();
+			TickMenuItem(Context);
 		}
 		else
 		{
