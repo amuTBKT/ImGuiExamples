@@ -26,26 +26,13 @@ namespace ImGuiMenuBar_RootWidget
 		// settings menu with icon
 		{
 			FImGuiImageBindingParams SettingsIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Settings"), 16.f * ImGui::GetStyle().FontScaleMain/*ImGui::GetTextLineHeightWithSpacing()*/);
-			if (bIsHorizontalMenu)
-			{
-				FImGui::SubMenu("    ###Settings",
-					[]()
-					{
-						ImGui::MenuItem("Setting#1");
-						ImGui::MenuItem("Setting#2");
-						ImGui::MenuItem("Setting#3");
-					}, SettingsIcon, /*IconOffset=*/ImVec2(0.f, 2.5f));
-			}
-			else
-			{
-				FImGui::SubMenu("Settings",
-					[]()
-					{
-						ImGui::MenuItem("Setting#1");
-						ImGui::MenuItem("Setting#2");
-						ImGui::MenuItem("Setting#3");
-					}, SettingsIcon);
-			}
+			FImGui::SubMenu(Context, bIsHorizontalMenu ? "##Settings" : "Settings",
+				[]()
+				{
+					ImGui::MenuItem("Setting#1");
+					ImGui::MenuItem("Setting#2");
+					ImGui::MenuItem("Setting#3");
+				}, SettingsIcon, bIsHorizontalMenu ? ImVec2(0.f, 2.5f) : ImVec2(0.f, 0.f));
 		}
 
 		// input text widget for on screen print
@@ -227,7 +214,7 @@ namespace ImGuiMenuBar_SubMenuWidget
 
 		// we can also add menus
 		FImGuiImageBindingParams OptionsIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Settings"), ImGui::GetTextLineHeight());
-		FImGui::SubMenu("Options",
+		FImGui::SubMenu(Context, "Options",
 			[]()
 			{
 				ImGui::MenuItem("Option#1");

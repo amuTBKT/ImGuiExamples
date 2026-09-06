@@ -59,7 +59,7 @@ namespace ImGuiDemoWidget
 		UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
 		auto MenuIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Info"), ImGui::GetTextLineHeight());
-		FImGui::SubMenu("Demo",
+		FImGui::SubMenu(Context, "Demo",
 			[&]()
 			{
 				if (ImGui::MenuItem("Unreal", nullptr, bShowUnrealDemo))
