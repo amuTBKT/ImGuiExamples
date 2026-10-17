@@ -2,16 +2,13 @@
 
 #include "Engine/Engine.h"
 #include "ImGuiSubsystem.h"
+
 #include "Styling/AppStyle.h"
 #include "Styling/SlateTypes.h"
 
-// demo for adding widget to the main menu bar 
+// demo for adding widget to the main menu bar
 namespace ImGuiMenuBar_RootWidget
 {
-	static void Initialize()
-	{
-	}
-
 	static void Tick(FImGuiTickContext* Context)
 	{
 		FImGuiTickScope Scope{ Context };
@@ -25,33 +22,23 @@ namespace ImGuiMenuBar_RootWidget
 
 		// settings menu with icon
 		{
-			FImGuiImageBindingParams SettingsIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Settings"), 16.f * ImGui::GetStyle().FontScaleMain/*ImGui::GetTextLineHeightWithSpacing()*/);
-			FImGui::SubMenu(Context, bIsHorizontalMenu ? "##Settings" : "Settings",
+			FImGuiImageBindingParams SettingsIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Settings"), ImGui::GetTextLineHeight());
+			FImGui::SubMenu(Context, bIsHorizontalMenu ? "###Settings" : "Settings",
 				[]()
 				{
 					ImGui::MenuItem("Setting#1");
 					ImGui::MenuItem("Setting#2");
 					ImGui::MenuItem("Setting#3");
-				}, SettingsIcon, bIsHorizontalMenu ? ImVec2(0.f, 2.5f) : ImVec2(0.f, 0.f));
+				}, SettingsIcon, bIsHorizontalMenu ? ImVec2(0.f, ImGui::GetStyle().FramePadding.y) : ImVec2(0.f, 0.f));
 		}
 
 		// input text widget for on screen print
+		if (bIsHorizontalMenu)
 		{
 			static char TextBuffer[32] = { 0 };
-			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.f);
-			if (bIsHorizontalMenu)
-			{
-				ImGui::SetNextItemWidth(80.f * ImGui::GetStyle().FontScaleMain);
-			}
-			else
-			{
-				ImGui::SetNextItemWidth(100.f * ImGui::GetStyle().FontScaleMain);
-			}
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.f, 1.f));
-			ImGui::PushStyleColor(ImGuiCol_NavCursor, 0); // disable nav highlight
-			bool bProcessText = ImGui::InputTextWithHint("##Print", "Print text...", TextBuffer, sizeof(TextBuffer), ImGuiInputTextFlags_EnterReturnsTrue);
-			ImGui::PopStyleColor();
-			if (bProcessText)
+			ImGui::SetNextItemWidth(80.f * ImGui::GetStyle().FontScaleMain);
+			bool bPrintText = FImGui::EditableTextBox(Context, "##Print", "Print text...", TextBuffer, sizeof(TextBuffer), ImGuiInputTextFlags_EnterReturnsTrue);
+			if (bPrintText)
 			{
 				static const int32 PrintKey = ImGui::GetID("PrintID");
 				if (FCStringAnsi::Strlen(TextBuffer) > 0)
@@ -63,21 +50,11 @@ namespace ImGuiMenuBar_RootWidget
 				TextBuffer[0] = 0;
 				ImGui::SetKeyboardFocusHere(-1);
 			}
-			ImGui::PopStyleVar();
-
-			// draw nav highlight manually here
-			bool bInputTextHasFocus = ImGui::IsItemActive() || (Context->ImguiContext->NavId == ImGui::GetItemID());
-			if (bInputTextHasFocus)
-			{
-				ImDrawList* DrawList = ImGui::GetWindowDrawList();
-				DrawList->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 0.f, 1.f, ImDrawFlags_None);
-			}
 		}
 	}
 
 	FImGuiWidgetRegisterParams Params =
 	{
-		.InitFunction		 = &Initialize,
 		.TickFunction		 = &Tick,
 		.WidgetPath			 = "#CustomMenuBar", // this creates a top level entry '#CustomMenuBar' , sorted by name so '#' ensures it's the first item
 		.WidgetDescription	 = "",
@@ -91,10 +68,6 @@ namespace ImGuiMenuBar_SubMenuWidget
 {
 	static float Volume = 0.5f;
 	static bool bIsMuted = false;
-
-	static void Initialize()
-	{
-	}
 
 	// don't use as reference, just something hacked together for the demo...
 	static bool UnrealSlider(const char* label, float* p_data, const float p_min, const float p_max)
@@ -225,7 +198,6 @@ namespace ImGuiMenuBar_SubMenuWidget
 
 	FImGuiWidgetRegisterParams Params =
 	{
-		.InitFunction = &Initialize,
 		.TickFunction = &Tick,
 		.WidgetPath = "ImGui.SubMenu.CustomWidget", // this creates a hierarchy ImGui -> SubMenu -> 'CustomWidget (this is our customization point)'
 		.WidgetDescription = "",

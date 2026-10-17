@@ -10,6 +10,9 @@ THIRD_PARTY_INCLUDES_START
 #include <nanosvgrast.h>
 THIRD_PARTY_INCLUDES_END
 
+#include "Styling/SlateTypes.h"
+#include "Styling/StyleColors.h"
+
 namespace ImGuiDemoWidget
 {
 	// persistent state for the widget
@@ -84,7 +87,7 @@ namespace ImGuiDemoWidget
 		// optionally update widget active state to disable window tick
 		*Context->MainMenuBar_CurrentItemEnabledState = bShowUnrealDemo || bShowImGuiDemo || bShowImPlotDemo;
 	}
-	static void TickWindows()
+	static void TickWindows(FImGuiTickContext* TickContext)
 	{
 		UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
@@ -92,13 +95,29 @@ namespace ImGuiDemoWidget
 		{
 			if (ImGui::Begin("Unreal Demo", &bShowUnrealDemo))
 			{
+				static const FSpinBoxStyle& SpinBoxStyle = FAppStyle::Get().GetWidgetStyle<FSpinBoxStyle>(IMGUI_FNAME("SpinBox"));
+				static const FButtonStyle& PrimaryButtonStyle = FAppStyle::Get().GetWidgetStyle<FButtonStyle>(IMGUI_FNAME("PrimaryButton"));
+				static const FButtonStyle& SecondaryButtonStyle = FAppStyle::Get().GetWidgetStyle<FButtonStyle>(IMGUI_FNAME("SecondaryButton"));
+				static const FComboButtonStyle& DarkComboButtonStyle = FAppStyle::Get().GetWidgetStyle<FComboButtonStyle>(IMGUI_FNAME("ComboButton"));
+				static const FComboButtonStyle& LightComboButtonStyle = []()
+					{
+						auto Style = FAppStyle::Get().GetWidgetStyle<FComboButtonStyle>(IMGUI_FNAME("SimpleComboButton"));
+						Style.ButtonStyle = SecondaryButtonStyle;
+						Style.ButtonStyle.NormalPadding = FMargin(8.f, 1.f, 8.f, 1.f);
+						Style.ButtonStyle.PressedPadding = FMargin(8.f, 2.f, 8.f, 0.f);
+						Style.ButtonStyle.Normal.OutlineSettings.Color = FSlateColor(EStyleColor::White25);
+						Style.ButtonStyle.Hovered.OutlineSettings.Color = FSlateColor(EStyleColor::Hover);
+						Style.ButtonStyle.Pressed.OutlineSettings.Color = FSlateColor(EStyleColor::Hover);
+						return Style;
+					}();
+
 				static int32 ClickCount = 0;
-				if (ImGui::Button("Click"))
+				if (FImGui::Button(TickContext, "Button##Primary", PrimaryButtonStyle))
 				{
 					++ClickCount;
 				}
 				ImGui::SameLine();
-				ImGui::Text("Count: %i", ClickCount);
+				FImGui::TextBlockf(TickContext, "Count: %i", ClickCount);
 
 				ImGui::NewLine();
 				ImGui::SeparatorText("Font");
@@ -122,9 +141,9 @@ namespace ImGuiDemoWidget
 					// how to use slate icons/brushes with ImGui
 
 					auto UnrealLogo = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "UnrealCircle.Thick"), 32.f * ImGui::GetStyle().FontScaleMain);
-					ImGui::Image(UnrealLogo.Id, UnrealLogo.Size, UnrealLogo.UV0, UnrealLogo.UV1);
-					ImGui::SameLine(); ImGui::SetCursorPosY(ImGui::GetCursorPosY() + UnrealLogo.Size.y * 0.25f);
-					ImGui::Text("Slate icon");
+					FImGui::Image(UnrealLogo);
+					ImGui::SameLine();
+					FImGui::TextBlock(TickContext, "Slate icon");
 				}
 
 				ImGui::NewLine();
@@ -141,11 +160,14 @@ namespace ImGuiDemoWidget
 						});
 					static ImFontAtlasRectId SVGAtlasRectId = ImFontAtlasRectId_Invalid;
 
-					ImGui::InputTextWithHint("##SVGPath", "SVG file path...", SVGFilepath, sizeof(SVGFilepath));
+					FImGui::EditableTextBox("##SVGPath", "SVG file path...", SVGFilepath, sizeof(SVGFilepath));
+
 					ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x * 0.5f);
-					ImGui::DragFloat("##SVGSize", &SVGSize, 1.f, 4.f, 128.f);
+					FImGui::SpinBox(TickContext, "##SVGSize", SVGSize, SpinBoxStyle, 1.f, 4.f, 128.f);
+
 					ImGui::SameLine();
-					if (ImGui::Button("Rasterize SVG"))
+
+					if (FImGui::Button("Rasterize SVG", SecondaryButtonStyle, ImVec4(4.f, 5.f, 4.f, 5.f)))
 					{
 						ImFontAtlas* FontAtlas = ImGuiSubsystem->GetSharedFontAtlas();
 						if (SVGAtlasRectId != ImFontAtlasRectId_Invalid)
@@ -190,6 +212,89 @@ namespace ImGuiDemoWidget
 						ImGui::Image(ImTextureID_Invalid, ImVec2(SVGSize, SVGSize));
 					}
 				}
+
+				ImGui::NewLine();
+				ImGui::SeparatorText("Combo");
+				{
+					/** different style combo widget
+					FImGui::PushComboListViewDropdownStyle/FImGui::PopComboListViewDropdownStyle to apply popup styling
+					FImGui::BeginComboListViewDropdownBody/FImGui::EndComboListViewDropdownBody to apply selectable styling
+					**/
+
+					static const char* PreviewText = "None";
+					static const char* Items[] = { "Item A", "Item B", "Item C", "Item D", "Item E", "Item F" };
+
+					// helper function to draw selectable spanning entire row (with padded text)
+					auto ComboListSelectable = [](bool bSelected, const char* Text)
+						{
+							float CursorPosX = ImGui::GetCursorPosX();
+							bSelected = ImGui::Selectable("", bSelected, ImGuiSelectableFlags_SpanAllColumns);
+
+							ImGui::SameLine(); ImGui::SetCursorPosX(CursorPosX + 8.f);
+
+							ImGui::TextUnformatted(Text);
+							return bSelected;
+						};
+					auto ComboListSelectablef = [](bool bSelected, const char* Fmt, ...)
+						{
+							float CursorPosX = ImGui::GetCursorPosX();
+							bSelected = ImGui::Selectable("", bSelected, ImGuiSelectableFlags_SpanAllColumns);
+
+							ImGui::SameLine(); ImGui::SetCursorPosX(CursorPosX + 8.f);
+
+							va_list args;
+							va_start(args, Fmt);
+							ImGui::TextV(Fmt, args);
+							va_end(args);
+							return bSelected;
+						};
+
+					ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.f, 0.5f));
+
+					ImGui::SetNextItemWidth(120.f * ImGui::GetStyle().FontScaleMain);
+					FImGui::PushComboListViewDropdownStyle(TickContext, /*bDarkTheme*/true);
+					if (FImGui::BeginCombo(TickContext, "##DarkCombo", PreviewText, DarkComboButtonStyle))
+					{
+						FImGui::BeginComboListViewDropdownBody(TickContext);
+						for (auto Item : Items)
+						{
+							FImGuiNamedScope SelectableScope{ Item };
+							if (ComboListSelectable(PreviewText == Item, Item))
+							{
+								PreviewText = Item;
+							}
+						}
+						FImGui::EndComboListViewDropdownBody(TickContext);
+
+						FImGui::EndCombo();
+					}
+					FImGui::PopComboListViewDropdownStyle(TickContext);
+
+					ImGui::SameLine();
+					ImGui::Dummy(ImVec2(32.f, 0.f));
+					ImGui::SameLine();
+
+					ImGui::SetNextItemWidth(120.f * ImGui::GetStyle().FontScaleMain);
+					FImGui::PushComboListViewDropdownStyle(TickContext, /*bDarkTheme*/false);
+					if (FImGui::BeginCombo(TickContext, "##LightCombo", PreviewText, LightComboButtonStyle))
+					{
+						FImGui::BeginComboListViewDropdownBody(TickContext);
+						for (auto Item : Items)
+						{
+							FImGuiNamedScope SelectableScope{ Item };
+							if(ComboListSelectablef(PreviewText == Item, "-- %s --", Item))
+							{
+								PreviewText = Item;
+							}
+						}
+						FImGui::EndComboListViewDropdownBody(TickContext);
+
+						FImGui::EndCombo();
+					}
+					FImGui::PopComboListViewDropdownStyle(TickContext);
+
+					ImGui::PopStyleVar();
+				}
 			}
 			ImGui::End();
 		}
@@ -226,7 +331,7 @@ namespace ImGuiDemoWidget
 		else
 		{
 			// `bTickInMenuBar` also allows widget to tick windows
-			TickWindows();
+			TickWindows(Context);
 		}
 	}
 
@@ -236,8 +341,8 @@ namespace ImGuiDemoWidget
 		.TickFunction		 = &Tick,
 		.WidgetIcon			 = IMGUI_STYLE_ICON("CoreStyle", "Icons.Info"),
 		.WidgetPath			 = "ImGui.Demo",
-		.WidgetDescription	 = "Demo Widget",		
-		.bSkipWindowCreation = true,	// allows widget to create and manage multiple ImGui windows		
+		.WidgetDescription	 = "Demo Widget",
+		.bSkipWindowCreation = true,	// allows widget to create and manage multiple ImGui windows
 		.bTickInMenuBar		 = true		// needed to customize menu bar item
 	};
 	IMGUI_REGISTER_MAIN_MENU_WIDGET(Params);
