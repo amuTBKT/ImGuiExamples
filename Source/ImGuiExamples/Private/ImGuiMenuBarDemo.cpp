@@ -57,7 +57,6 @@ namespace ImGuiMenuBar_RootWidget
 	{
 		.TickFunction		 = &Tick,
 		.WidgetPath			 = "#CustomMenuBar", // this creates a top level entry '#CustomMenuBar' , sorted by name so '#' ensures it's the first item
-		.WidgetDescription	 = "",
 		.bTickInMenuBar		 = true
 	};
 	IMGUI_REGISTER_MAIN_MENU_WIDGET(Params);
@@ -181,7 +180,7 @@ namespace ImGuiMenuBar_SubMenuWidget
 			ImGui::EndDisabled();
 			if (!bIsMuted)
 			{
-				ImGui::SetItemTooltip("%i", FMath::RoundToInt(Volume * 100.f));
+				FImGui::SetItemTooltip("%i", FMath::RoundToInt(Volume * 100.f));
 			}
 		}
 
@@ -200,7 +199,6 @@ namespace ImGuiMenuBar_SubMenuWidget
 	{
 		.TickFunction = &Tick,
 		.WidgetPath = "ImGui.SubMenu.CustomWidget", // this creates a hierarchy ImGui -> SubMenu -> 'CustomWidget (this is our customization point)'
-		.WidgetDescription = "",
 		.bTickInMenuBar = true
 	};
 	IMGUI_REGISTER_MAIN_MENU_WIDGET(Params);

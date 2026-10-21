@@ -69,19 +69,19 @@ namespace ImGuiDemoWidget
 				{
 					bShowUnrealDemo = !bShowUnrealDemo;
 				}
-				ImGui::SetItemTooltip("Show Unreal demo window");
+				FImGui::SetItemTooltip("Show Unreal demo window");
 
 				if (ImGui::MenuItem("ImGui", nullptr, bShowImGuiDemo))
 				{
 					bShowImGuiDemo = !bShowImGuiDemo;
 				}
-				ImGui::SetItemTooltip("Show ImGui demo window");
+				FImGui::SetItemTooltip("Show ImGui demo window");
 
 				if (ImGui::MenuItem("ImPlot", nullptr, bShowImPlotDemo))
 				{
 					bShowImPlotDemo = !bShowImPlotDemo;
 				}
-				ImGui::SetItemTooltip("Show ImPlot demo window");
+				FImGui::SetItemTooltip("Show ImPlot demo window");
 			}, MenuIcon);
 
 		// optionally update widget active state to disable window tick
