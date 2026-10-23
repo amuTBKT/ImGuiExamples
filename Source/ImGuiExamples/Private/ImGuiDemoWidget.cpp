@@ -62,7 +62,9 @@ namespace ImGuiDemoWidget
 		UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
 		auto MenuIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Info"), ImGui::GetTextLineHeight());
-		FImGui::SubMenu(Context, "Demo",
+		const char* MenuLabel = (ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal) ? "###ImGui" : "ImGui";
+		const ImVec2 MenuIconOffset = (ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal) ? ImVec2(0.f, ImGui::GetStyle().FramePadding.y) : ImVec2(0.f, 0.f);
+		FImGui::SubMenu(Context, MenuLabel,
 			[&]()
 			{
 				if (ImGui::MenuItem("Unreal", nullptr, bShowUnrealDemo))
@@ -82,7 +84,8 @@ namespace ImGuiDemoWidget
 					bShowImPlotDemo = !bShowImPlotDemo;
 				}
 				FImGui::SetItemTooltip("Show ImPlot demo window");
-			}, MenuIcon);
+			}, MenuIcon, MenuIconOffset);
+		FImGui::SetItemTooltip("%s", "ImGui demo widgets");
 
 		// optionally update widget active state to disable window tick
 		*Context->MainMenuBar_CurrentItemEnabledState = bShowUnrealDemo || bShowImGuiDemo || bShowImPlotDemo;
@@ -340,10 +343,10 @@ namespace ImGuiDemoWidget
 		.InitFunction		 = &Initialize,
 		.TickFunction		 = &Tick,
 		.WidgetIcon			 = IMGUI_STYLE_ICON("CoreStyle", "Icons.Info"),
-		.WidgetPath			 = "ImGui.Demo",
-		.WidgetDescription	 = "Demo Widget",
+		.WidgetPath			 = "ImGui",
 		.bSkipWindowCreation = true,	// allows widget to create and manage multiple ImGui windows
-		.bTickInMenuBar		 = true		// needed to customize menu bar item
+		.bTickInMenuBar		 = true,	// needed to customize menu bar item
+		.bRightAligned		 = true
 	};
 	IMGUI_REGISTER_MAIN_MENU_WIDGET(Params);
 }

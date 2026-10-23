@@ -36,7 +36,7 @@ void AImGuiWindowActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 #ifdef WITH_IMGUI
 	UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 	ImGuiSubsystem->UnregisterMainMenuWidget(GetWorld(), "Demo.Actor");
-	
+
 	if (TSharedPtr<SWindow> Window = WidgetWindow.Pin())
 	{
 		Window->RequestDestroyWindow();
@@ -50,7 +50,7 @@ void AImGuiWindowActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AImGuiWindowActor::TickImGuiWidget(FImGuiTickContext* Context)
 {
 	FImGuiTickScope Scope{ Context };
-		
+
 	UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
 	ImGui::Text("Transform");
@@ -69,7 +69,7 @@ void AImGuiWindowActor::TickImGuiWidget(FImGuiTickContext* Context)
 		}
 	}
 	ImGui::Unindent();
-		
+
 	ImGui::NewLine();
 
 	ImGui::BeginDisabled(Texture == nullptr);

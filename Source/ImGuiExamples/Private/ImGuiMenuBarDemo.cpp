@@ -198,7 +198,7 @@ namespace ImGuiMenuBar_SubMenuWidget
 	FImGuiWidgetRegisterParams Params =
 	{
 		.TickFunction = &Tick,
-		.WidgetPath = "ImGui.SubMenu.CustomWidget", // this creates a hierarchy ImGui -> SubMenu -> 'CustomWidget (this is our customization point)'
+		.WidgetPath = "Demo.SubMenu.CustomWidget", // this creates a hierarchy Demo -> SubMenu -> 'CustomWidget (this is our customization point)'
 		.bTickInMenuBar = true
 	};
 	IMGUI_REGISTER_MAIN_MENU_WIDGET(Params);
