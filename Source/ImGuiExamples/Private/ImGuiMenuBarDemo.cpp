@@ -18,7 +18,7 @@ namespace ImGuiMenuBar_RootWidget
 		// the widget slot is never activated so we should not receive window tick callbacks!
 		check(Context->MainMenuBar_bIsTicking);
 
-		const bool bIsHorizontalMenu = ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal;
+		const bool bIsHorizontalMenu = (ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal);
 
 		// settings menu with icon
 		{
@@ -29,7 +29,7 @@ namespace ImGuiMenuBar_RootWidget
 					ImGui::MenuItem("Setting#1");
 					ImGui::MenuItem("Setting#2");
 					ImGui::MenuItem("Setting#3");
-				}, SettingsIcon, bIsHorizontalMenu ? ImVec2(0.f, ImGui::GetStyle().FramePadding.y) : ImVec2(0.f, 0.f));
+				}, bIsHorizontalMenu ? SettingsIcon : FImGuiImageBindingParams(), ImVec2(0.f, ImGui::GetStyle().FramePadding.y));
 		}
 
 		// input text widget for on screen print

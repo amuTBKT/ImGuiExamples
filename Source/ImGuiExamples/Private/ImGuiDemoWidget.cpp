@@ -61,10 +61,10 @@ namespace ImGuiDemoWidget
 	{
 		UImGuiSubsystem* ImGuiSubsystem = UImGuiSubsystem::Get();
 
+		const bool bIsHorizontalMenu = (ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal);
+
 		auto MenuIcon = ImGuiSubsystem->RegisterOneFrameResource(IMGUI_STYLE_ICON_BRUSH("CoreStyle", "Icons.Info"), ImGui::GetTextLineHeight());
-		const char* MenuLabel = (ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal) ? "###ImGui" : "ImGui";
-		const ImVec2 MenuIconOffset = (ImGui::GetCurrentWindow()->DC.LayoutType == ImGuiLayoutType_Horizontal) ? ImVec2(0.f, ImGui::GetStyle().FramePadding.y) : ImVec2(0.f, 0.f);
-		FImGui::SubMenu(Context, MenuLabel,
+		FImGui::SubMenu(Context, bIsHorizontalMenu ? "###ImGui" : "ImGui",
 			[&]()
 			{
 				if (ImGui::MenuItem("Unreal", nullptr, bShowUnrealDemo))
@@ -84,7 +84,7 @@ namespace ImGuiDemoWidget
 					bShowImPlotDemo = !bShowImPlotDemo;
 				}
 				FImGui::SetItemTooltip("Show ImPlot demo window");
-			}, MenuIcon, MenuIconOffset);
+			}, bIsHorizontalMenu ? MenuIcon : FImGuiImageBindingParams(), ImVec2(0.f, ImGui::GetStyle().FramePadding.y));
 		FImGui::SetItemTooltip("%s", "ImGui demo widgets");
 
 		// optionally update widget active state to disable window tick
