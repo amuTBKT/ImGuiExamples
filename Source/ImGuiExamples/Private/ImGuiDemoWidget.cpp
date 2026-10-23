@@ -342,8 +342,8 @@ namespace ImGuiDemoWidget
 	{
 		.InitFunction		 = &Initialize,
 		.TickFunction		 = &Tick,
-		.WidgetIcon			 = IMGUI_STYLE_ICON("CoreStyle", "Icons.Info"),
 		.WidgetPath			 = "ImGui",
+		.WidgetIcon			 = IMGUI_STYLE_ICON("CoreStyle", "Icons.Info"),
 		.bSkipWindowCreation = true,	// allows widget to create and manage multiple ImGui windows
 		.bTickInMenuBar		 = true,	// needed to customize menu bar item
 		.bRightAligned		 = true
