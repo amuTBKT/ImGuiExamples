@@ -255,7 +255,7 @@ namespace ImGuiDemoWidget
 					ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.f, 0.5f));
 
 					ImGui::SetNextItemWidth(120.f * ImGui::GetStyle().FontScaleMain);
-					FImGui::PushComboListViewDropdownStyle(TickContext, /*bDarkTheme*/true);
+					FImGui::PushComboListViewDropdownStyle(TickContext, /*bNormalDropdown=*/false);
 					if (FImGui::BeginCombo(TickContext, "##DarkCombo", PreviewText, DarkComboButtonStyle))
 					{
 						FImGui::BeginComboListViewDropdownBody(TickContext);
@@ -278,7 +278,7 @@ namespace ImGuiDemoWidget
 					ImGui::SameLine();
 
 					ImGui::SetNextItemWidth(120.f * ImGui::GetStyle().FontScaleMain);
-					FImGui::PushComboListViewDropdownStyle(TickContext, /*bDarkTheme*/false);
+					FImGui::PushComboListViewDropdownStyle(TickContext, /*bNormalDropdown=*/true);
 					if (FImGui::BeginCombo(TickContext, "##LightCombo", PreviewText, LightComboButtonStyle))
 					{
 						FImGui::BeginComboListViewDropdownBody(TickContext);
