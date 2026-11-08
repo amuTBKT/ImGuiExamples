@@ -135,7 +135,9 @@ namespace ImGuiDemoWidget
 						ImGui::Text("Text using custom font");
 						ImGui::PopFont();
 					}
-					ImGui::Text("Text using default font");
+					ImGui::TextUnformatted("Text using default font");
+
+					ImGui::TextUnformatted("日本語");
 				}
 
 				ImGui::NewLine();
